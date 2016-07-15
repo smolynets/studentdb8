@@ -38,6 +38,7 @@ href="{{ PORTAL_URL }}{% static "css/main.css" %}">
 <ul class="nav nav-tabs" role="tablist">
 <li role="presentation" {% if request.path == '/' %}class="active"{% endif %}><a href="{% url "main" %}">Студенти</a></li><li role="presentation" {% if '/vid' in request.path %}class="active"{% endif %}><a href="{% url "journal" %}">Відвідування</a></li>
 <li role="presentation" {% if '/grup' in request.path %}class="active"{% endif %}><a href="{% url "groups" %}">Групи</a></li>
+<li role="presentation" {% if '/contact-admin' in request.path %}class="active"{% endif %}><a href="{% url "contact_admin" %}">Звязатися</a></li>
 </ul>
 </div>
 </div>
@@ -48,7 +49,7 @@ href="{{ PORTAL_URL }}{% static "css/main.css" %}">
 
 {% block status_message %}
 {% if request.GET.status_message %}
-<div class="alert alert-warning" role="alert">{{ request.POST.first_name }}{{ request.GET.status_message }}</div>
+<div class="alert alert-warning" role="alert">{{ request.GET.status_message }}</div>
 {% endif %}
 {% endblock %}
 

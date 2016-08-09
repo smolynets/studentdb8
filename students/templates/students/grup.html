@@ -9,7 +9,7 @@
           <div class="col-xs-12" id="content-column">
              <h2>Групи</h2>
              <!add student button>
-             <a class="btn btn-primary" href="#" role="button" id="edd">Додати групу</a>
+             <a class="btn btn-primary" href="{% url "groups_add" %}" role="button" id="edd">Додати групу</a>
          </div>
          </div>
          <!start table of students>
@@ -50,9 +50,9 @@
 <tbody>
 {% for group in groups %}
 <tr>
-<td>{{ forloop.counter }}</td>
-<td>{{ group.title }}</td>
-<td>{{ group.leader }}</td>
+<td><a href="{% url "groups_one" group.id %}">{{ forloop.counter }}</td>
+<td><a href="{% url "groups_one" group.id %}">{{ group.title }}</td>
+<td><a href="{% url "groups_one" group.id %}">{{ group.leader }}</td>
 <td>
 <div class="btn-group">
 <button type="button" class="btn btn-default dropdown-toggle"

@@ -6,6 +6,7 @@ from ..models.student import Student
 from ..models.group import Group
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime
+from django.contrib import messages
 def students_list(request):
    students = Student.objects.all()
    # try to order students list
@@ -66,7 +67,7 @@ def stud_add(request):
         data['ticket'] = ticket
       student_group_id = request.POST.get('student_group_id', '').strip()
       if not student_group_id:
-        errors['student_group'] = u"Оберіть групу для студента"
+        errors['student_group_id'] = u"Оберіть групу для студента"
       else:
         groups = Group.objects.filter(pk=student_group_id)
         if len(groups) != 1:
@@ -79,15 +80,13 @@ def stud_add(request):
           errors['photo'] = u"Файл завеликий"
         else:
           data['photo'] = photo
-      notes = request.POST.get('notes', '').strip()
-      
-      
+           
       # save student
       if not errors:
         student = Student(**data)
         student.save()
         # redirect to students list
-        return HttpResponseRedirect( u'%s?status_message=Студента успішно додано!' % reverse('main'))
+        return HttpResponseRedirect( u'%s?status_message=Студента успішно додано!'  % reverse('main'))
       else:
         # render form with errors and previous user input
         return render(request, 'students/students_add.html',
@@ -102,7 +101,101 @@ def stud_add(request):
 
 
 
-def students_edit(request, sid):
-    return HttpResponse('<h1>Edit Student %s</h1>' % sid)
-def students_delete(request, sid):
-    return HttpResponse('<h1>Delete Student %s</h1>' % sid)
+def student_edit(request, pk):
+    students = Student.objects.filter(pk=pk)
+    groups = Group.objects.all()
+
+    
+    if request.method == "POST":
+        data = Student.objects.get(pk=pk)
+        if request.POST.get('add_button') is not None:
+            data.middle_name = request.POST.get('middle_name', '').strip()
+            data.notes = request.POST.get('notes', '').strip()
+            errors = {}
+
+            first_name = request.POST.get('first_name', '').strip()
+            if not first_name:
+                errors['first_name'] = u"Імʼя є обовʼязковим."
+            else:
+                data.first_name = first_name
+
+            last_name = request.POST.get('last_name', '').strip()
+            if not last_name:
+                errors['last_name'] = u"Прізвище є обовʼязковим."
+            else:
+                data.last_name = last_name
+
+            birthday = request.POST.get('birthday', '').strip()
+            if not birthday:
+                errors['birthday'] = u"Дата народження є обовʼязковою."
+            else:
+                try:
+                    bd = datetime.strptime(birthday, '%Y-%m-%d')
+                except Exception:
+                    errors['birthday'] = u"Введіть коректний формат дати (напр. 1987-12-30)"
+                else:
+                    data.birthday = bd
+           
+            photo = request.FILES.get('photo')
+            if photo:
+             if len(photo) > (10 * 1024):
+               errors['photo'] = u"Файл завеликий"
+             else:
+               data.photo = photo
+
+            ticket = request.POST.get('ticket', '').strip()
+            if not ticket:
+                errors['ticket'] = u"Номер білета є обовʼязковим."
+            else:
+                data.ticket = ticket
+
+            student_group_id = request.POST.get('student_group_id', '').strip()
+            if not student_group_id:
+                errors['student_group_id'] = u"Група є обовʼязковою"
+            else:
+                gr = Group.objects.filter(pk=student_group_id)
+                if len(gr) != 1:
+                    errors['student_group_id'] = u"Оберіть коректну групу"
+                else:
+                    grps = Group.objects.filter(leader=Student.objects.get(pk=pk))
+                    if len(grps) > 0 and int(student_group_id) != grps[0].pk:
+                        errors['student_group'] = u"Студент є старостою іншої групи"
+                    else:
+                        data.student_group_id = gr[0]
+
+            if errors:
+                return render(request, 'students/students_edit.html', {'pk': pk, 'student': data, 'errors': errors, 'groups': groups})
+            else:
+                data.save()
+                return HttpResponseRedirect( reverse('main'))
+        elif request.POST.get('cancel_button') is not None:
+
+            return HttpResponseRedirect(u'%s?status_message=Редагування студента скасовано!' % reverse('main'))
+        
+    else:
+        return render(request,
+                      'students/students_edit.html',
+                      {'pk': pk, 'student': students[0], 'groups': groups})
+
+
+
+
+
+
+def student_delete(request, pk):
+    students = Student.objects.filter(pk=pk)
+    
+    if request.method == "POST":
+        if request.POST.get('yes') is not None:
+          students.delete()
+          return HttpResponseRedirect( u'%s?status_message=Студента успішно видалено!'  % reverse('main'))
+        elif request.POST.get('cancel_button') is not None:
+          return HttpResponseRedirect( u'%s?status_message=Видалення  студента  скасовано!'  % reverse('main'))
+        
+    else:
+        return render(request,
+                      'students/students_delete.html',
+                      {'pk': pk, 'student': students[0]})
+
+
+

@@ -7,6 +7,7 @@ from ..models.group import Group
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime
 from django.contrib import messages
+from PIL import Image
 def students_list(request):
    students = Student.objects.all()
    # try to order students list
@@ -76,10 +77,18 @@ def stud_add(request):
           data['student_group_id'] = groups[0]
       photo = request.FILES.get('photo')
       if photo:
-        if len(photo) > (10 * 1024):
-          errors['photo'] = u"Файл завеликий"
+        if photo.name.split(".")[-1].lower() not in ('jpg', 'jpeg', 'png', 'gif'):
+           errors['photo'] = u"Файл має бути одного з наступних типів: jpg, jpeg, png, gif"
         else:
-          data['photo'] = photo
+           try:
+             Image.open(photo)
+           except Exception:
+             errors['photo'] = u"Завантажений файл не є файлом зображення або пошкоджений"
+           else:
+             if photo.size > 2 * 1024 * 1024:
+                errors['photo'] = u"Фото занадто велике (розмір файлу має бути менше 2Мб)"
+             else:
+                data['photo'] = photo
            
       # save student
       if not errors:

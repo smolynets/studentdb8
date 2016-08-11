@@ -36,8 +36,10 @@ href="{{ PORTAL_URL }}{% static "css/main.css" %}">
 <div class="row" id="sub-header">
 <div class="col-xs-12">
 <ul class="nav nav-tabs" role="tablist">
-<li role="presentation" {% if request.path == '/' %}class="active"{% endif %}><a href="{% url "main" %}">Студенти</a></li><li role="presentation" {% if '/vid' in request.path %}class="active"{% endif %}><a href="{% url "journal" %}">Відвідування</a></li>
+<li role="presentation" {% if request.path == '/' %}class="active"{% endif %}><a href="{% url "main" %}">Студенти</a></li>
+<li role="presentation" {% if '/vid' in request.path %}class="active"{% endif %}><a href="{% url "journal" %}">Відвідування</a></li>
 <li role="presentation" {% if '/grup' in request.path %}class="active"{% endif %}><a href="{% url "groups" %}">Групи</a></li>
+<li role="presentation" {% if '/exams' in request.path %}class="active"{% endif %}><a href="{% url "exams" %}">Екзамени</a></li>
 <li role="presentation" {% if '/contact-admin' in request.path %}class="active"{% endif %}><a href="{% url "contact_admin" %}">Звязатися</a></li>
 </ul>
 </div>

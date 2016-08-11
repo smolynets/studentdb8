@@ -35,6 +35,9 @@ url(r'^groups/(?P<pk>\d+)/delete/$',
 url(r'^groups/(?P<pk>\d+)/one/$',
 'students.view.group.groups_one', name='groups_one'),
 url(r'^admin/', include(admin.site.urls)),
+#exams url
+url(r'^exams$', 'students.view.exams.exams_list', name='exams'),
+url(r'^exam_add$', 'students.view.exams.exam_add', name='exam_add'),
 # Contact Admin Form
 url(r'^contact-admin/$', 'students.view.contact_admin.contact_admin',
 name='contact_admin'),

@@ -73,7 +73,7 @@ def groups_add(request):
 
 def groups_edit(request, pk):
     groups = Group.objects.filter(pk=pk)
-    students = Student.objects.all()
+    students = Student.objects.filter(student_group_id=groups)
     
     if request.method == "POST":
       data = Group.objects.get(pk=pk)
@@ -94,9 +94,12 @@ def groups_edit(request, pk):
         else:
           data.title = title
         leader = request.POST.get('leader', '').strip()
-        if  leader: 
-            st = Student.objects.filter(pk=leader)
-            data.leader = st[0]
+        try:
+          st = Student.objects.filter(pk=leader)
+          data.leader = st[0]
+        except:
+            return HttpResponseRedirect( u'%s?status_message=Редагування групи скасовано!Група  не містить студентів!' % reverse('groups'))
+          
         
         # save student
         if not errors:

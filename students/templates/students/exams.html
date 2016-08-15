@@ -57,20 +57,20 @@
 </tbody>
 </table>
 <!-- End Students Listing -->
-{% if students.has_other_pages %}
+{% if exams.has_other_pages %}
 {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
 <nav>
 <ul class="pagination">
 <li>
 <a href="{% url "main" %}?page=1&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">&laquo;</a>
 </li>
-{% for p in students.paginator.page_range %}
-<li {% if students.number == p %}class="active"{% endif %}>
-<a href="{% url "main" %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a>
+{% for p in exams.paginator.page_range %}
+<li {% if exams.number == p %}class="active"{% endif %}>
+<a href="{% url "exams" %}?page={{ p }}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">{{ p }}</a>
 </li>
 {% endfor %}
 <li>
-<a href="{% url "main" %}?page={{ students.paginator.num_pages}}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">
+<a href="{% url "exams" %}?page={{ exams.paginator.num_pages}}&amp;order_by={{ order_by }}&amp;reverse={{ reverse }}">
 &raquo;</a>
 </li>
 </ul>

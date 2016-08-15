@@ -50,9 +50,11 @@ def exam_add(request):
         data['title'] = title
       group = request.POST.get('group', '').strip()
       if not group:
-        errors['group'] = u"Група є обов'язковим"
+        errors['group'] = u"Назва групи є обов'язковою"
       else:
-        data['group'] = group
+        data['group'] = Group.objects.filter(pk=group)
+      
+
       date = request.POST.get('date', '').strip()
       if not date:
         errors['date'] = u"Дата  є обов'язковою"
@@ -64,7 +66,7 @@ def exam_add(request):
         exam = Exam(**data)
         exam.save()
         # redirect to students list
-        return HttpResponseRedirect( u'%s?status_message=Екзамен успішно додано!'  % reverse('exam_add'))
+        return HttpResponseRedirect( u'%s?status_message=Екзамен успішно додано!'  % reverse('exams'))
       else:
         # render form with errors and previous user input
         return render(request, 'students/exam_add.html',

@@ -17,7 +17,7 @@ def exams_list(request):
      if request.GET.get('reverse', '') == '1':
        exams = exams.reverse()
    # paginate students
-   paginator = Paginator(exams, 3)
+   paginator = Paginator(exams, 10)
    page = request.GET.get('page')
    try:
      exams = paginator.page(page)
@@ -52,7 +52,8 @@ def exam_add(request):
       if not group:
         errors['group'] = u"Назва групи є обов'язковою"
       else:
-        data['group'] = Group.objects.filter(pk=group)
+        #data['group'] = Group.objects.filter(pk=group)
+        data['group'] = group
       
 
       date = request.POST.get('date', '').strip()
@@ -73,9 +74,83 @@ def exam_add(request):
         {'groups': Group.objects.all().order_by('title'),'errors': errors})
     elif request.POST.get('cancel_button') is not None:
       # redirect to home page on cancel button
-      return HttpResponseRedirect( u'%s?status_message=Додавання екзамена скасовано!' % reverse('exams_list'))
+      return HttpResponseRedirect( u'%s?status_message=Додавання екзамена скасовано!' % reverse('exams'))
   else:
    # initial form render
    return render(request, 'students/exam_add.html',
    {'groups': Group.objects.all().order_by('title')})
+
+
+
+
+
+  
+
+
+
+
+
+
+
+def exam_edit(request, pk):
+    exams = Exam.objects.filter(pk=pk)
+    groups = Group.objects.all()
+
+    
+    if request.method == "POST":
+        data = Exam.objects.get(pk=pk)
+        if request.POST.get('add_button') is not None:
+            
+            errors = {}
+
+            title = request.POST.get('title', '').strip()
+            if not title:
+                errors['title'] = u"Імʼя є обовʼязковим."
+            else:
+                data.title = title
+
+            group = request.POST.get('group', '').strip()
+            if not group:
+                errors['group'] = u"Група є обовязковою!"
+            else:
+                data.group = group
+
+            date = request.POST.get('date', '').strip()
+            if not date:
+                errors['date'] = u"Дата народження є обовʼязковою."
+            else:
+                
+                data.date = date
+           
+            
+            if errors:
+                return render(request, 'students/exam_edit.html', {'pk': pk, 'exam': data, 'errors': errors, 'groups': groups})
+            else:
+                data.save()
+                return HttpResponseRedirect(u'%s?status_message=Редагування екзамена  завершено' % reverse('exams'))
+        elif request.POST.get('cancel_button') is not None:
+
+            return HttpResponseRedirect(u'%s?status_message=Редагування екзамену скасовано!' % reverse('exams'))
+        
+    else:
+        return render(request,
+                      'students/exam_edit.html',
+                      {'pk': pk, 'exam': exams[0], 'groups': groups})
+                      
+                      
+                      
+def exam_delete(request, pk):
+    exams = Exam.objects.filter(pk=pk)
+    
+    if request.method == "POST":
+        if request.POST.get('yes') is not None:
+          exams.delete()
+          return HttpResponseRedirect( u'%s?status_message=Екзамен успішно видалено!'  % reverse('exams'))
+        elif request.POST.get('cancel_button') is not None:
+          return HttpResponseRedirect( u'%s?status_message=Видалення  екзамену  скасовано!'  % reverse('exams'))
+        
+    else:
+        return render(request,
+                      'students/exam_delete.html',
+                      {'pk': pk, 'exam': exams[0]})
 

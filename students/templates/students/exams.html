@@ -1,7 +1,7 @@
 {% extends "students/base.html" %}
 {% load static from staticfiles %}
 {% block meta_title %}Студенти{% endblock meta_title %}
-{% block title %}База Студентів{% endblock title %}
+{% block title %}Список  екзаменів{% endblock title %}
 {% block content %}
 <a href="{% url "exam_add" %}" class="btn btn-primary">Додати екзамен</a>
 <!-- Start Students Listing -->
@@ -49,10 +49,22 @@
 {% for exam in exams %}
 <tr>
 <td>{{ forloop.counter }}</td>
-<td><a href="">{{ exam.title }}</td>
-<td><a href="">{{ exam.group }}</td>
-<td>{{ exam.date }}</td>
-
+<td><a href="{% url "exam_edit" exam.id %}">{{ exam.title }}</td>
+<td><a href="{% url "exam_edit" exam.id %}">{{ exam.group }}</td>
+<td><a href="{% url "exam_edit" exam.id %}">{{ exam.date }}</td>
+<td>
+<div class="btn-group">
+<button type="button" class="btn btn-default dropdown-toggle"
+data-toggle="dropdown">Дія
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu" role="menu">
+<li><a href="{% url "exam_edit" exam.id %}">Редагувати</a></li>
+<li><a href="{% url "exam_delete" exam.id %}">Видалити</a></li>
+</ul>
+</div>
+</td>
+</tr>
 {% endfor %}
 </tbody>
 </table>

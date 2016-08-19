@@ -38,6 +38,10 @@ url(r'^admin/', include(admin.site.urls)),
 #exams url
 url(r'^exams$', 'students.view.exams.exams_list', name='exams'),
 url(r'^exam_add$', 'students.view.exams.exam_add', name='exam_add'),
+url(r'^exams/(?P<pk>\d+)/edit/$',
+'students.view.exams.exam_edit', name='exam_edit'),
+url(r'^exams/(?P<pk>\d+)/delete/$',
+'students.view.exams.exam_delete', name='exam_delete'),
 # Contact Admin Form
 url(r'^contact-admin/$', 'students.view.contact_admin.contact_admin',
 name='contact_admin'),

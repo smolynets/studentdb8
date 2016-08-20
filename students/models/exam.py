@@ -10,13 +10,13 @@ class Exam(models.Model):
     max_length=256,
     blank=False,
     verbose_name=u"Назва")
-  group = models.CharField(
-    max_length=256,
-    verbose_name=u"Група",
+  group = models.OneToOneField('Group',
+    verbose_name=u"Староста",
     blank=True,
-    null=True)
+    null=True,
+    on_delete=models.SET_NULL)
   date = models.DateField(
     blank=True,
     verbose_name=u"Дати")
   def __unicode__(self):
-    return u"%s %s" % (self.title, self.group)
+    return u"%s %s" % (self.title)

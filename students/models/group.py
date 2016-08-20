@@ -18,6 +18,11 @@ class Group(models.Model):
   notes = models.TextField(
     blank=True,
     verbose_name=u"Додаткові нотатки")
+  exam_group = models.ForeignKey('Exam',
+    verbose_name=u"Група",
+    blank=False,
+    null=True,
+    on_delete=models.PROTECT)
   def __unicode__(self):
     if self.leader:
       return u"%s (%s %s)" % (self.title, self.leader.first_name,

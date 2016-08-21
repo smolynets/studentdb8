@@ -18,7 +18,7 @@ class Group(models.Model):
   notes = models.TextField(
     blank=True,
     verbose_name=u"Додаткові нотатки")
-  exam_group = models.ForeignKey('Exam',
+  exams = models.ForeignKey('Exam',
     verbose_name=u"Група",
     blank=False,
     null=True,

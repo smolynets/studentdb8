@@ -8,11 +8,12 @@ from ..models.exam import Exam
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime
 from django.contrib import messages
+from datetime import datetime
 def exams_list(request):
    exams = Exam.objects.all()
    # try to order students list
    order_by = request.GET.get('order_by', '')
-   if order_by in ('title', 'exam_group', 'date', '#'):
+   if order_by in ('title', 'group', 'date', '#'):
      exams = exams.order_by(order_by)
      if request.GET.get('reverse', '') == '1':
        exams = exams.reverse()
@@ -29,7 +30,7 @@ def exams_list(request):
      # last page of results.
      exams = paginator.page(paginator.num_pages)
    return render(request, 'students/exams.html',
-     {'exam': exams})
+     {'exams': exams})
 
 
 
@@ -41,21 +42,30 @@ def exam_add(request):
       # errors collection
       errors = {}
       # data for student object
-      data = {'exam_group': request.POST.get('exam_group')}
+      data = {}
       # validate user input
       title = request.POST.get('title', '').strip()
       if not title:
         errors['title'] = u"Ім'я є обов'язковим"
       else:
         data['title'] = title
-      
-
+      group = request.POST.get('group', '').strip()
+      if not group:
+        errors['group'] = u"Група  є обовязковою!"
+      else:
+        data['group'] = Group.objects.get(pk=group)
       date = request.POST.get('date', '').strip()
       if not date:
-        errors['date'] = u"Дата  є обов'язковою"
+        errors['date'] = u"Дата є обов'язковою"
       else:
-        data['date'] = date
+        try:
+          datetime.strptime(date, '%Y-%m-%d')
+        except Exception:
+          errors['date'] = u"Введіть коректний формат дати (напр. 1986-03-23)"
+        else:
+          data['date'] = date
       
+           
       # save exam
       if not errors:
         exam = Exam(**data)
@@ -87,7 +97,7 @@ def exam_add(request):
 
 
 def exam_edit(request, pk):
-    exam = Exam.objects.filter(pk=pk)
+    exams = Exam.objects.filter(pk=pk)
     groups = Group.objects.all()
 
     
@@ -104,10 +114,10 @@ def exam_edit(request, pk):
                 data.title = title
 
             group = request.POST.get('group', '').strip()
-            
-            ex = Group.objects.filter(group)
-            data.exam_group = ex[0]
-            
+            if not group:
+                errors['group'] = u"Група є обовязковою!"
+            else:
+                data.group = group
 
             date = request.POST.get('date', '').strip()
             if not date:
@@ -124,12 +134,12 @@ def exam_edit(request, pk):
                 return HttpResponseRedirect(u'%s?status_message=Редагування екзамена  завершено' % reverse('exams'))
         elif request.POST.get('cancel_button') is not None:
 
-            return HttpResponseRedirect(u'%s?status_message=Редагування екзамену скасовано!' % reverse('exams'))
+            return HttpResponseRedirect(u'%s?status_message=Редагування студента скасовано!' % reverse('main'))
         
     else:
         return render(request,
                       'students/exam_edit.html',
-                      {'pk': pk, 'exam': exam[0], 'groups': groups})
+                      {'pk': pk, 'exam': exams[0], 'groups': groups})
                       
                       
                       

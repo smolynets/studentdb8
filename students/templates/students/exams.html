@@ -1,7 +1,7 @@
 {% extends "students/base.html" %}
 {% load static from staticfiles %}
 {% block meta_title %}Студенти{% endblock meta_title %}
-{% block title %}Список  екзаменів{% endblock title %}
+{% block title %}База Студентів{% endblock title %}
 {% block content %}
 <a href="{% url "exam_add" %}" class="btn btn-primary">Додати екзамен</a>
 <!-- Start Students Listing -->
@@ -50,7 +50,7 @@
 <tr>
 <td>{{ forloop.counter }}</td>
 <td><a href="{% url "exam_edit" exam.id %}">{{ exam.title }}</td>
-<td><a href="{% url "exam_edit" exam.id %}">{{ exam.exam_group }}</td>
+<td><a href="{% url "exam_edit" exam.id %}">{{ exam.group }}</td>
 <td><a href="{% url "exam_edit" exam.id %}">{{ exam.date }}</td>
 <td>
 <div class="btn-group">

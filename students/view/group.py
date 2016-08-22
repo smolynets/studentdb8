@@ -73,8 +73,7 @@ def groups_add(request):
 
 def groups_edit(request, pk):
     groups = Group.objects.filter(pk=pk)
-    students = Student.objects.filter(pk=pk)
-    #students = Student.objects.filter(student_group_id=groups)
+    students = Student.objects.filter(student_group_id=groups)
     
     if request.method == "POST":
       data = Group.objects.get(pk=pk)

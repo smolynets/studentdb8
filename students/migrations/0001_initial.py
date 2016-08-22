@@ -30,7 +30,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=256, verbose_name='\u041d\u0430\u0437\u0432\u0430')),
                 ('notes', models.TextField(verbose_name='\u0414\u043e\u0434\u0430\u0442\u043a\u043e\u0432\u0456 \u043d\u043e\u0442\u0430\u0442\u043a\u0438', blank=True)),
-                ('exams', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, verbose_name='\u0413\u0440\u0443\u043f\u0430', to='students.Exam', null=True)),
             ],
             options={
                 'verbose_name': '\u0413\u0440\u0443\u043f\u0430',
@@ -65,7 +64,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='exam',
-            name='exam_group',
+            name='group',
             field=models.ForeignKey(verbose_name='\u0413\u0440\u0443\u043f\u0430', to='students.Group', null=True),
             preserve_default=True,
         ),

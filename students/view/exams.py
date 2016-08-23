@@ -117,7 +117,7 @@ def exam_edit(request, pk):
             if not group:
                 errors['group'] = u"Група є обовязковою!"
             else:
-                data.group = group
+                data.group = Group.objects.get(pk=group)
 
             date = request.POST.get('date', '').strip()
             if not date:

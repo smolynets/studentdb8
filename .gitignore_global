@@ -3,3 +3,5 @@
 *.egg-info
 *.mo
 *.egg
+mail.py
+database.py

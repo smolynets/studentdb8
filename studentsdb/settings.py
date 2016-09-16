@@ -72,29 +72,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'studentsdb.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, '..', 'db.sqlite3'),
-    # }
-   # 'default': {
-    #    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-     #   'NAME': 'mydb1',
-      #  'USER': 'oleh1',
-       # 'PASSWORD': '0000',
-       # 'HOST': 'localhost',
-       # 'PORT': '',
-    #}
-    'default': {
-      'ENGINE': 'django.db.backends.mysql',
-      'HOST': 'localhost',
-      'USER': 'students_db_user',
-      'PASSWORD': '0000',
-      'NAME': 'students_db',
-    }
-}
+from .database import DATABASES
 
 
 
@@ -143,15 +121,4 @@ global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 
-# email settings
-# please, set here you smtp server details and your admin email
-ADMIN_EMAIL = 'admin@studentsdb.com'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = '465'
-EMAIL_HOST_USER = 'smolynets1@gmail.com'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
-
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
+from .mail import *
